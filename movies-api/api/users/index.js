@@ -28,6 +28,21 @@ router.post('/', asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, msg: 'Internal server error.' });
     }
 }));
+router.post('/login', asyncHandler(async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findByUserName(username);
+    if (!user) {
+        return res.status(401).json({ message: 'Authentication failed. User not found.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+        return res.status(401).json({ message: 'Wrong password.' });
+    }
+
+    const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET, { expiresIn: '1h' });
+    res.status(200).json({ token, username: user.username });
+}));
 
 
 // Update a user

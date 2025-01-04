@@ -16,7 +16,7 @@ import TrendingMoviesPage from "./pages/trendingMoviesPage";
 import UpcomingMoviesPage from "./pages/upcomingMoviesPage";
 import SignUpPage from "./pages/signUpPage";
 import LoginPage from "./pages/loginPage";
-import ProtectedRoutes from "./protectedRoutes,js";
+import ProtectedRoutes from "./protectedRoutes.js";
 
 
 
@@ -49,7 +49,7 @@ const App = () => {
           <Route path="/movies/trending" element={<TrendingMoviesPage />} />
           <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
 
         </MoviesContextProvider>
