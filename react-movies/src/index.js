@@ -14,6 +14,10 @@ import { DarkModeProvider } from "./contexts/themeContext";
 import WatchlistPage from "./pages/watchlistPage";
 import TrendingMoviesPage from "./pages/trendingMoviesPage";
 import UpcomingMoviesPage from "./pages/upcomingMoviesPage";
+import SignUpPage from "./pages/signUpPage";
+import LoginPage from "./pages/loginPage";
+import ProtectedRoutes from "./protectedRoutes,js";
+
 
 
 
@@ -33,17 +37,21 @@ const App = () => {
       <BrowserRouter>
         <SiteHeader />
         <MoviesContextProvider>
-          <Routes>
-            <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
-            <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
-            <Route path="/movies/:id" element={<MoviePage />} />
-            <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
-            <Route path="/" element={<HomePage />} />
-            <Route path="*" element={ <Navigate to="/" /> } />
-            <Route path="/movies/watchlist" element={<WatchlistPage />} />
-            <Route path="movies/trending" element={<TrendingMoviesPage />} />
-            <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
-          </Routes>
+        <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+          <Route path="/reviews/:id" element={<MovieReviewPage />} />
+          <Route path="/movies/:id" element={<MoviePage />} />
+          <Route path="/reviews/form" element={<AddMovieReviewPage />} />
+          <Route path="/movies/watchlist" element={<WatchlistPage />} />
+          <Route path="/movies/trending" element={<TrendingMoviesPage />} />
+          <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+
         </MoviesContextProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
