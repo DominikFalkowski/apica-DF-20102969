@@ -1,26 +1,32 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
-import usersRouter from './api/users';
-import './db';
-import defaultErrHandler from './errHandler';
-import moviesRouter from './api/movies'; 
-import authenticate from './authenticate';
-
+import dotenv from 'dotenv';
+import userRoutes from './api/users/index.js';
+import movieRoutes from './api/movies/index.js';
+import defaultErrHandler from './errHandler/index.js';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT; 
 
 app.use(cors());
 app.use(express.json());
-app.use('/api/users', usersRouter);
-app.use('/api/movies', moviesRouter); 
-app.use(defaultErrHandler);
-app.use('/api/movies', authenticate, moviesRouter);
 
+app.use('/api/users', userRoutes);
+app.use('/api/movies', movieRoutes);
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the Movies API!');
+});
+
+app.use((req, res) => {
+    res.status(404).send('Route not found');
+});
+
+app.use(defaultErrHandler);
+
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-  console.info(`Server running at ${port}`);
+    console.log(`Server running on http://localhost:${port}`);
 });
