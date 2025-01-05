@@ -5,7 +5,7 @@ import asyncHandler from 'express-async-handler';
 
 const router = express.Router();
 
-// Get all users (for testing or admin purposes)
+// Get all users 
 router.get('/', async (req, res) => {
     try {
         const users = await User.find();
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 // Register a new user
-router.post('/register', async (req, res) => {
+router.post('/register',asyncHandler(async (req, res) => {
     const { username, password } = req.body;
     try {
         const existingUser = await User.findByUserName(username);
@@ -33,32 +33,35 @@ router.post('/register', async (req, res) => {
         console.error(error);
         res.status(500).json({ success: false, msg: 'Error creating user.' });
     }
-});
+}));
+
 
 
 
 
 // Authenticate (Login) a user
-router.post('/login', async (req, res) => {
+router.post('/login',asyncHandler(async (req, res) => {
     const { username, password } = req.body;
+
     try {
         const user = await User.findByUserName(username);
         if (!user) {
-            return res.status(401).json({ message: 'Authentication failed. User not found.' });
+            return res.status(401).json({ message: 'User not found' });
         }
 
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Wrong password.' });
+            return res.status(401).json({ message: 'Incorrect password' });
         }
 
         const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET, { expiresIn: '1h' });
         res.status(200).json({ token, username: user.username });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error during authentication.' });
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Error during authentication' });
     }
-});
+}));
+
 
 
 
@@ -75,25 +78,22 @@ router.put('/:id', asyncHandler(async (req, res) => {
 
     res.status(200).json({ success: true, msg: 'User updated successfully.', user: updatedUser });
 }));
-async function registerUser(req, res) {
-    // Add input validation logic here
-    await User.create(req.body);
-    res.status(201).json({ success: true, msg: 'User successfully created.' });
-}
+// router.get('/public', (req, res) => {
+//     res.send('This is a public route');
+// });
 
-async function authenticateUser(req, res) {
-    const user = await User.findByUserName(req.body.username);
-    if (!user) {
-        return res.status(401).json({ success: false, msg: 'Authentication failed. User not found.' });
-    }
+// router.get('/protected', authenticate, (req, res) => {
+//     res.send(`Welcome, ${req.user.username}`);
+// });
 
-    const isMatch = await user.comparePassword(req.body.password);
+// router.use('/users', userRoutes);
+
+    const isMatch = await User.comparePassword(req.body.password);
     if (isMatch) {
-        const token = jwt.sign({ username: user.username }, process.env.SECRET);
+        const token = jwt.sign({ username: User.username }, process.env.SECRET);
         res.status(200).json({ success: true, token: 'BEARER ' + token });
     } else {
         res.status(401).json({ success: false, msg: 'Wrong password.' });
     }
-}
 
 export default router;

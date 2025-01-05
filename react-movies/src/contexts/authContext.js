@@ -17,8 +17,9 @@ export const AuthProvider = ({ children }) => {
         console.log('Login Response:', data); // Log response
 
         if (!response.ok) {
-            throw new Error(data.message || "Login failed");
-        }
+          const errorMessage = data.message || "Login failed";
+          throw new Error(errorMessage);
+      }
 
         localStorage.setItem("token", data.token);
         setIsAuthenticated(true);

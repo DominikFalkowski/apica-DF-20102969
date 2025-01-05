@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+dotenv.config();
 import userRoutes from './api/users/index.js';
 import movieRoutes from './api/movies/index.js';
 import defaultErrHandler from './errHandler/index.js';
