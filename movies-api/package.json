@@ -2,6 +2,7 @@
   "name": "movies-api",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "babel-node index.js",
     "dev": "babel-node ./moviesData/initialise-dev/initDevDB.js && nodemon --exec npm start"
