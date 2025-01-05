@@ -28,12 +28,24 @@ const SiteHeader = () => {
     { label: "Watchlist", path: "/movies/watchlist" },
     { label: "Trending", path: "/movies/trending" },
     { label: "Upcoming", path: "/movies/upcoming" },
-
+    {
+      label: "Sign Out",
+      path: "/login", 
+      action: () => {
+        localStorage.removeItem("token"); 
+        navigate("/login"); 
+      },
+    },
   ];
 
-  const handleMenuSelect = (pageURL) => {
-    navigate(pageURL, { replace: true });
+  const handleMenuSelect = (pageURL, action) => {
+    if (action) {
+      action();
+    } else {
+      navigate(pageURL, { replace: true });
+    }
   };
+  
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -96,7 +108,7 @@ const SiteHeader = () => {
                 <Button
                   key={opt.label}
                   color="inherit"
-                  onClick={() => handleMenuSelect(opt.path)}
+                  onClick={() => handleMenuSelect(opt.path,opt.action)}
                 >
                   {opt.label}
                 </Button>

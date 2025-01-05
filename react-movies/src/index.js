@@ -43,9 +43,8 @@ const App = () => {
             <MoviesContextProvider>
               <Routes>
                 
-                <Route path="/" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
-
                 <Route element={<ProtectedRoutes />}>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
@@ -56,8 +55,8 @@ const App = () => {
                   <Route path="/movies/trending" element={<TrendingMoviesPage />} />
                   <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
                 </Route>
-                            
-                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="*" element={<Navigate to="/login" />} />
+
               </Routes>
             </MoviesContextProvider>
           </DarkModeProvider>
