@@ -1,44 +1,52 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { AuthContext } from '../contexts/authContext';
+import { AuthContext } from "../contexts/authContext";
 
-const SignUpPage = props => {
-  const context = useContext(AuthContext)
+const SignUpPage = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [registered, setRegistered] = useState(false);
+  const context = useContext(AuthContext);
 
   const register = () => {
-    let passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    console.log("Register function triggered");
+    let passwordRegEx = /^.{3,}$/;
     const validPassword = passwordRegEx.test(password);
 
     if (validPassword && password === passwordAgain) {
+      console.log("Passwords are valid and match");
       context.register(userName, password);
       setRegistered(true);
+    } else {
+      console.log("Password validation failed or passwords do not match");
     }
-  }
+  };
 
-  if (registered === true) {
+  if (registered) {
     return <Navigate to="/login" />;
   }
 
   return (
-    <>
-      <h2>SignUp page</h2>
-      <p>You must register a username and password to log in </p>
-      <input value={userName} placeholder="user name" onChange={e => {
-        setUserName(e.target.value);
-      }}></input><br />
-      <input value={password} type="password" placeholder="password" onChange={e => {
-        setPassword(e.target.value);
-      }}></input><br />
-      <input value={passwordAgain} type="password" placeholder="password again" onChange={e => {
-        setPasswordAgain(e.target.value);
-      }}></input><br />
-      {/* Login web form  */}
+    <div>
+      <h1>Register</h1>
+      <input
+        type="text"
+        placeholder="Username"
+        onChange={(e) => setUserName(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        onChange={(e) => setPasswordAgain(e.target.value)}
+      />
       <button onClick={register}>Register</button>
-    </>
+    </div>
   );
 };
 

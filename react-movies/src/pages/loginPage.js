@@ -6,7 +6,7 @@ const LoginPage = () => {
     const { authenticate, isAuthenticated } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate(); // Use navigate for routing
+    const navigate = useNavigate(); 
 
     const handleLogin = async () => {
         await authenticate(username, password);

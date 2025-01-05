@@ -17,43 +17,50 @@ router.get('/', async (req, res) => {
 });
 
 // Register a new user
-router.post('/register', asyncHandler(async (req, res) => {
+router.post('/register', async (req, res) => {
     const { username, password } = req.body;
+    try {
+        const existingUser = await User.findByUserName(username);
+        if (existingUser) {
+            return res.status(400).json({ success: false, msg: 'Username already exists.' });
+        }
 
-    if (!username || !password) {
-        return res.status(400).json({ success: false, msg: 'Username and password are required.' });
+        const newUser = new User({ username, password });
+        await newUser.save();
+
+        res.status(201).json({ success: true, msg: 'User successfully created.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, msg: 'Error creating user.' });
     }
+});
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-        return res.status(400).json({ success: false, msg: 'Username already exists.' });
-    }
 
-    await User.create({ username, password });
-    res.status(201).json({ success: true, msg: 'User successfully created.' });
-}));
+
 
 // Authenticate (Login) a user
-router.post('/login', asyncHandler(async (req, res) => {
+router.post('/login', async (req, res) => {
     const { username, password } = req.body;
+    try {
+        const user = await User.findByUserName(username);
+        if (!user) {
+            return res.status(401).json({ message: 'Authentication failed. User not found.' });
+        }
 
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required.' });
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Wrong password.' });
+        }
+
+        const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET, { expiresIn: '1h' });
+        res.status(200).json({ token, username: user.username });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error during authentication.' });
     }
+});
 
-    const user = await User.findByUserName(username);
-    if (!user) {
-        return res.status(401).json({ message: 'Authentication failed. User not found.' });
-    }
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-        return res.status(401).json({ message: 'Wrong password.' });
-    }
-
-    const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET, { expiresIn: '1h' });
-    res.status(200).json({ token, username: user.username });
-}));
 
 // Update a user
 router.put('/:id', asyncHandler(async (req, res) => {

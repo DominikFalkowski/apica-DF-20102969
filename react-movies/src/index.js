@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { AuthContext } from "./contexts/authContext";
 import LoginHeader from "./components/loginHeader/index.js";
 import LoginPage from "./pages/loginPage"; 
 import SignUpPage from "./pages/signUpPage"; 
