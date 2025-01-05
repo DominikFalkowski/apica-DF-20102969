@@ -1,11 +1,12 @@
 import React, { createContext, useState } from "react";
 
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const authenticate = async (username, password) => {
+  const authenticate = async (username, password, navigate) => {
     try {
         const response = await fetch('http://localhost:8080/api/users/login', {
             method: 'POST',
@@ -17,17 +18,19 @@ export const AuthProvider = ({ children }) => {
         console.log('Login Response:', data); // Log response
 
         if (!response.ok) {
-          const errorMessage = data.message || "Login failed";
-          throw new Error(errorMessage);
-      }
+            const errorMessage = data.message || "Login failed";
+            throw new Error(errorMessage);
+        }
 
         localStorage.setItem("token", data.token);
         setIsAuthenticated(true);
+
     } catch (error) {
         console.error("Login Error:", error.message);
         setIsAuthenticated(false);
     }
 };
+
 
 
   const register = async (username, password) => {

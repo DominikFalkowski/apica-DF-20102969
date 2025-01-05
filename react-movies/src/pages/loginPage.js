@@ -13,7 +13,7 @@ const LoginPage = () => {
     };
 
     if (isAuthenticated) {
-        return <Navigate to="/movies/favorites" />;
+        return <Navigate to="/" />;
     }
 
     return (

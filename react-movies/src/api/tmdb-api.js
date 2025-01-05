@@ -128,23 +128,19 @@ export const getUpcomingMovies = () => {
       throw error;
     });
 };
-export const searchActor = (actorName) => {
-  return fetch(
-    "https://api.themoviedb.org/3/search/person?query=${actorName}&api_key="+
+export const searchActor = async (actorName) => {
+  const response = await fetch(
+    "https://api.themoviedb.org/3/search/person?query=${actorName}&api_key=" +
     process.env.REACT_APP_TMDB_KEY
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch actor details");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (data.results.length === 0) {
-        throw new Error("No actor found with this name");
-      }
-      return data.results[0]; 
-    });
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch actor details");
+  }
+  const data = await response.json();
+  if (data.results.length === 0) {
+    throw new Error("No actor found with this name");
+  }
+  return data.results[0];
 };
 
 export const getMoviesByActor = (actorId) => {

@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import LoginHeader from "./components/loginHeader/index.js";
 import LoginPage from "./pages/loginPage"; 
 import SignUpPage from "./pages/signUpPage"; 
+import HomePage from "./pages/homePage";
 import MoviePage from "./pages/movieDetailsPage";
 import AddMovieReviewPage from "./pages/addMovieReviewPage";
 import FavoriteMoviesPage from "./pages/favoriteMoviesPage";
@@ -19,6 +20,7 @@ import ProtectedRoutes from "./protectedRoutes.js";
 import { AuthProvider } from "./contexts/authContext"; 
 import MoviesContextProvider from "./contexts/moviesContext"; 
 import { DarkModeProvider } from "./contexts/themeContext"; 
+
 
 
 const queryClient = new QueryClient({
@@ -45,6 +47,7 @@ const App = () => {
                 <Route path="/signup" element={<SignUpPage />} />
 
                 <Route element={<ProtectedRoutes />}>
+                  <Route path="/" element={<HomePage />} />
                   <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
                   <Route path="/reviews/:id" element={<MovieReviewPage />} />
                   <Route path="/movies/:id" element={<MoviePage />} />
