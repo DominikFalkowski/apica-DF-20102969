@@ -18,7 +18,7 @@ const WatchlistMoviesPage = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("ilikecake")}`,
           },
         });
 
@@ -43,7 +43,7 @@ const WatchlistMoviesPage = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("ilikecake")}`,
         },
       });
 

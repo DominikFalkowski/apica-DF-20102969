@@ -9,6 +9,7 @@ router.get("/", authenticateToken, async (req, res) => {
       const watchlist = await Watchlist.find({ userId: req.user._id });
       res.status(200).json(watchlist);
     } catch (error) {
+      console.error("Error fetching watchlist:", error); 
       res.status(500).json({ message: "Failed to fetch watchlist", error });
     }
   });
