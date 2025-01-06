@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -12,15 +12,19 @@ import { styled } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Switch from "@mui/material/Switch";
 import { useTheme } from "../../contexts/themeContext";
+import { AuthContext } from "../../contexts/authContext";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const SiteHeader = () => {
   const { darkMode, toggleDarkMode } = useTheme();
+  const { signout, isAuthenticated } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:768px)");
+
+  const username = localStorage.getItem("username");
 
   const menuOptions = [
     { label: "Home", path: "/" },
@@ -28,24 +32,16 @@ const SiteHeader = () => {
     { label: "Watchlist", path: "/movies/watchlist" },
     { label: "Trending", path: "/movies/trending" },
     { label: "Upcoming", path: "/movies/upcoming" },
-    {
-      label: "Sign Out",
-      path: "/login", 
-      action: () => {
-        localStorage.removeItem("token"); 
-        navigate("/login"); 
-      },
-    },
   ];
 
-  const handleMenuSelect = (pageURL, action) => {
-    if (action) {
-      action();
-    } else {
-      navigate(pageURL, { replace: true });
-    }
+  const handleSignOut = () => {
+    signout(); 
+    navigate("/login"); 
   };
-  
+
+  const handleMenuSelect = (pageURL) => {
+    navigate(pageURL, { replace: true });
+  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -61,6 +57,11 @@ const SiteHeader = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             All you ever wanted to know about Movies!
           </Typography>
+          {isAuthenticated && (
+            <Typography sx={{ marginRight: "1rem" }}>
+              Welcome, {username || "Guest"}!
+            </Typography>
+          )}
           <Switch
             checked={darkMode}
             onChange={toggleDarkMode}
@@ -100,6 +101,7 @@ const SiteHeader = () => {
                     {opt.label}
                   </MenuItem>
                 ))}
+                <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
               </Menu>
             </>
           ) : (
@@ -108,11 +110,14 @@ const SiteHeader = () => {
                 <Button
                   key={opt.label}
                   color="inherit"
-                  onClick={() => handleMenuSelect(opt.path,opt.action)}
+                  onClick={() => handleMenuSelect(opt.path)}
                 >
                   {opt.label}
                 </Button>
               ))}
+              <Button color="inherit" onClick={handleSignOut}>
+                Sign Out
+              </Button>
             </>
           )}
         </Toolbar>

@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import LoginHeader from "./components/loginHeader/index.js";
 import LoginPage from "./pages/loginPage"; 
 import SignUpPage from "./pages/signUpPage"; 
 import HomePage from "./pages/homePage";
@@ -20,6 +19,7 @@ import ProtectedRoutes from "./protectedRoutes.js";
 import { AuthProvider } from "./contexts/authContext"; 
 import MoviesContextProvider from "./contexts/moviesContext"; 
 import { DarkModeProvider } from "./contexts/themeContext"; 
+import SiteHeader from "./components/siteHeader/index.js";
 
 
 
@@ -38,11 +38,10 @@ const App = () => {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <LoginHeader />
           <DarkModeProvider>
+            <SiteHeader />
             <MoviesContextProvider>
               <Routes>
-                
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route element={<ProtectedRoutes />}>
@@ -56,7 +55,6 @@ const App = () => {
                   <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/login" />} />
-
               </Routes>
             </MoviesContextProvider>
           </DarkModeProvider>
@@ -66,6 +64,7 @@ const App = () => {
     </AuthProvider>
   );
 };
+
 
 // Render the app
 const rootElement = createRoot(document.getElementById("root"));
