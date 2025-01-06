@@ -8,7 +8,7 @@ import WriteReview from "../components/cardIcons/writeReview";
 import RemoveFromWatchlist from "../components/cardIcons/removeFromWatchlist";
 
 const WatchlistMoviesPage = () => {
-  const { watchlist: movieIds } = useContext(MoviesContext);
+  const { watchlist: movieIds, setWatchList } = useContext(MoviesContext);
   const [loading, setLoading] = useState(true);
 
  useEffect(() => {
@@ -27,7 +27,7 @@ const WatchlistMoviesPage = () => {
         }
 
         const data = await response.json();
-        movieIds(data.movies || []);
+        setWatchList(data.movies || []);
       } catch (error) {
         console.error("Error fetching watchlist:", error.message);
       } finally {
@@ -36,7 +36,7 @@ const WatchlistMoviesPage = () => {
     };
 
     fetchWatchlist();
-  }, []);
+  }, [setWatchList]);
   const removeFromWatchlist = async (movieId) => {
     try {
       const response = await fetch(`http://localhost:8080/api/watchlist/${movieId}`, {
@@ -51,7 +51,7 @@ const WatchlistMoviesPage = () => {
         throw new Error("Failed to remove movie from watchlist.");
       }
 
-      movieIds((prevMovies) => prevMovies.filter((movie) => movie.id !== movieId));
+      setWatchList((prevMovies) => prevMovies.filter((movie) => movie.id !== movieId));
     } catch (error) {
       console.error("Error removing from watchlist:", error.message);
     }
