@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useState,useContext, useEffect } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
 import { useQueries } from "react-query";
@@ -9,6 +9,53 @@ import RemoveFromWatchlist from "../components/cardIcons/removeFromWatchlist";
 
 const WatchlistMoviesPage = () => {
   const { watchlist: movieIds } = useContext(MoviesContext);
+  const [loading, setLoading] = useState(true);
+
+ useEffect(() => {
+    const fetchWatchlist = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/watchlist", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch watchlist.");
+        }
+
+        const data = await response.json();
+        movieIds(data.movies || []);
+      } catch (error) {
+        console.error("Error fetching watchlist:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWatchlist();
+  }, []);
+  const removeFromWatchlist = async (movieId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/watchlist/${movieId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to remove movie from watchlist.");
+      }
+
+      movieIds((prevMovies) => prevMovies.filter((movie) => movie.id !== movieId));
+    } catch (error) {
+      console.error("Error removing from watchlist:", error.message);
+    }
+  };
 
   const watchlistQueries = useQueries(
     movieIds.map((movieId) => {
@@ -43,7 +90,7 @@ const WatchlistMoviesPage = () => {
       action={(movie) => {
         return (
           <>
-            <RemoveFromWatchlist movie={movie} />
+            <RemoveFromWatchlist movie={movie} onRemove={() => removeFromWatchlist(movie.id)} />
             <WriteReview movie={movie} />
           </>
         );

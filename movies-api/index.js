@@ -6,6 +6,7 @@ import moviesRouter from './api/movies/index.js';
 import authenticate from './authenticate/index.js';
 import './db/index.js';
 import defaultErrHandler from './errHandler/index.js';
+import watchlistRouter from './api/watchlist/index.js';
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', usersRouter);
 app.use('/api/movies', authenticate, moviesRouter);
+app.use("/api/watchlist", watchlistRouter);
+
 
 app.use(defaultErrHandler);
 
