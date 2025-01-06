@@ -11,5 +11,9 @@ const  users = [
         'username': 'dominik',
         'password': 'dog',
     },
+    {
+        'username': 'dom',
+        'password': 'dom',
+    },
 ];
 export default users;

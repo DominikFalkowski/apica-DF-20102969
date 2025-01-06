@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, password) => {
     try {
-        const response = await fetch('http://localhost:8080/api/users/index.js/register', {
+        const response = await fetch('http://localhost:8080/api/users/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
